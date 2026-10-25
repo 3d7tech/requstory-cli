@@ -1,0 +1,47 @@
+name: Stage reviewed npm release
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Reviewed tag with passing CI (for example v1.0.0)
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    environment: npm-release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_tag }}
+          fetch-depth: 0
+      - name: Require reviewed release tag and passing CI
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$(git rev-parse HEAD)" = "$(git rev-list -n 1 "refs/tags/$RELEASE_TAG")"
+          conclusion="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$(git rev-parse HEAD)" --status success --json conclusion --jq '.[0].conclusion')"
+          test "$conclusion" = success
+          test "v$(node -p 'require("./package.json").version')" = "$RELEASE_TAG"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Install npm with staged publishing support
+        run: npm install --global npm@^11.15.0
+      - run: npm test
+      - name: Stage the package (approve it on npmjs.com)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          test -n "$NODE_AUTH_TOKEN"
+          npm whoami
+          npm stage publish --access public
