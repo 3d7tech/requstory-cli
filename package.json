@@ -1,0 +1,17 @@
+{
+  "name": "requstory",
+  "version": "1.0.0",
+  "description": "Requstory from the command line: map how a company works from its website, find the gaps, ask questions, and check ease scores and AI-agent readiness.",
+  "keywords": ["requstory", "operating model", "process mapping", "business process", "website analysis", "ai readiness", "ai agents", "mcp", "cli", "gap analysis"],
+  "homepage": "https://requstory.com/developers/api/",
+  "bugs": { "email": "hello@requstory.com" },
+  "repository": { "type": "git", "url": "git+https://github.com/3d7tech/requstory-cli.git" },
+  "license": "MIT",
+  "author": "3D7 Technologies Ltd <hello@requstory.com> (https://requstory.com)",
+  "type": "module",
+  "bin": { "requstory": "bin/requstory.js" },
+  "exports": "./src/client.js",
+  "files": ["bin", "src", "README.md", "LICENSE"],
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test" }
+}
