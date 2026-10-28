@@ -1,11 +1,11 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "requstory",
-  "version": "1.0.0",
-  "description": "Map how a company works, who owns each process, and which steps AI agents can run.",
+  "version": "1.1.0",
+  "description": "Map how a company works, and run B2B order to cash with AI agents that ask before they act.",
   "author": { "name": "3D7 Technologies Ltd", "email": "hello@requstory.com", "url": "https://requstory.com" },
   "homepage": "https://requstory.com/developers/api/",
   "repository": "https://github.com/3d7tech/requstory-cli",
   "license": "MIT",
-  "keywords": ["mcp", "operating-model", "business-process", "ai-agents", "ai-readiness"]
+  "keywords": ["mcp", "order-to-cash", "b2b-ecommerce", "invoicing", "operating-model", "business-process", "ai-agents", "ai-readiness"]
 }

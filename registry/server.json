@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
   "name": "com.requstory/mcp",
   "title": "Requstory",
-  "description": "Map how a company works, who owns each process, and which steps AI agents can run.",
-  "version": "1.0.0",
+  "description": "Map how a company works, and run B2B order to cash with AI agents that ask before they act.",
+  "version": "1.1.0",
   "websiteUrl": "https://requstory.com/developers/api/",
   "remotes": [
     {

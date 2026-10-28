@@ -1,8 +1,8 @@
 {
   "name": "requstory",
-  "version": "1.0.0",
-  "description": "Requstory from the command line: map how a company works from its website, find the gaps, ask questions, and check ease scores and AI-agent readiness.",
-  "keywords": ["requstory", "operating model", "process mapping", "business process", "website analysis", "ai readiness", "ai agents", "mcp", "cli", "gap analysis"],
+  "version": "1.1.0",
+  "description": "Requstory from the command line: map how a company works from its website, find the gaps, check ease scores and AI-agent readiness, and run B2B order to cash with AI agents.",
+  "keywords": ["requstory", "order to cash", "b2b", "invoicing", "accounts receivable", "ai agents for ecommerce", "operating model", "process mapping", "business process", "website analysis", "ai readiness", "ai agents", "mcp", "cli", "gap analysis"],
   "homepage": "https://requstory.com/developers/api/",
   "bugs": { "email": "hello@requstory.com" },
   "repository": { "type": "git", "url": "git+https://github.com/3d7tech/requstory-cli.git" },
