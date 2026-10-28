@@ -1,6 +1,6 @@
 ---
 name: requstory
-description: Map how a company works from its public website (customer journey, teams, processes, handoffs), find the gaps that make it hard to buy from or work with, ask questions about the map, and check public ease-of-doing-business scores and AI-agent readiness. Use when the user asks how a company operates, who owns what, where a business loses customers, how easy a company is to deal with, or whether AI agents can use a website.
+description: Map how a company works from its public website (customer journey, teams, processes, handoffs), find the gaps that make it hard to buy from or work with, ask questions about the map, and check public ease-of-doing-business scores and AI-agent readiness. Also runs B2B order to cash (orders, shipping, invoices and payments, returns) with AI agents that ask a person before credit, stock, payment and refund decisions. Use when the user asks how a company operates, who owns what, where a business loses customers, how easy a company is to deal with, whether AI agents can use a website, or wants agents to process a store's orders, invoices, payments or returns.
 homepage: https://requstory.com/developers/api/
 metadata: {"openclaw":{"primaryEnv":"REQUSTORY_API_KEY","requires":{"env":["REQUSTORY_API_KEY"]}}}
 ---
@@ -49,6 +49,17 @@ curl https://requstory.com/api/public/v1/maps/<mapId> -H "Authorization: Bearer 
 ## Limits
 
 10 calls a minute without a key, 60 with one. 5 new maps a day per account. 3 new AI-readiness checks an hour. On `429`, wait and retry later.
+
+## Order to cash (MCP server)
+
+Four agents run a B2B store's order to cash: read orders, check stock and credit, pick lists, invoices and their emails, match bank lines to invoices, chase late payers, handle returns. They stop and ask the founder about credit limits, short stock, packing, reminders, unclear payments and returns.
+
+Tools on `https://requstory.com/mcp`: `start_o2c_demo` (no key) or `start_o2c_run` (the business's own data, key, uses credits) → `advance_o2c_run` → `list_o2c_exceptions` → `resolve_o2c_exception` → `advance_o2c_run` again; `get_o2c_order` and `export_o2c_run` for the record. CLI: `requstory o2c …`.
+
+- Show each exception to the user and resolve it only with the choice they make. Never pick one yourself.
+- Sums, dates, stock and credit come from code; report them as given. Nothing is sent: emails are drafts in the export.
+- Business runs are deleted 2 days after the last change. Each order is $1.00 (100 credits) from the account's credits, model cost included, charged once.
+- Resources: `requstory://o2c/guide` explains the agents, approval rules and price; `requstory://o2c/runs/{runId}/log` and `/results` hold a run's record.
 
 ## Also available
 
