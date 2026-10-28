@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "requstory": {
+      "type": "streamable-http",
+      "url": "https://requstory.com/mcp"
+    }
+  }
+}
