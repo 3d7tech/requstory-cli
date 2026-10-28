@@ -1,0 +1,11 @@
+{
+  "name": "requstory",
+  "version": "1.0.0",
+  "description": "Map how a company works, who owns each process, and which steps AI agents can run.",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "requstory": {
+      "httpUrl": "https://requstory.com/mcp"
+    }
+  }
+}
