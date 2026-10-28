@@ -58,7 +58,8 @@ Tools on `https://requstory.com/mcp`: `start_o2c_demo` (no key) or `start_o2c_ru
 
 - Show each exception to the user and resolve it only with the choice they make. Never pick one yourself.
 - Sums, dates, stock and credit come from code; report them as given. Nothing is sent: emails are drafts in the export.
-- Business runs are deleted 2 days after the last change.
+- Business runs are deleted 2 days after the last change. Each order is $1.00 (100 credits) from the account's credits, model cost included, charged once.
+- Resources: `requstory://o2c/guide` explains the agents, approval rules and price; `requstory://o2c/runs/{runId}/log` and `/results` hold a run's record.
 
 ## Also available
 
