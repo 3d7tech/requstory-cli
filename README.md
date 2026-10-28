@@ -65,7 +65,7 @@ requstory o2c decide <runId> <exceptionId> accept
 requstory o2c run <runId>
 requstory o2c export <runId> --out=results
 
-# A day of your own business (key; model calls use your credits, about 1 credit an order)
+# A day of your own business (key; $1.00 an order from your credits, model cost included)
 requstory o2c start business.json --map=<mapId>
 ```
 
@@ -86,7 +86,7 @@ requstory o2c start business.json --map=<mapId>
 }
 ```
 
-Order scans (`file`) are JPEG or PNG under 3 MB, relative to the JSON file. Without `approvals` the agents ask you about every credit overrun and refund; with them, orders above `ordersOver` always come to you, and the code (not the model) lets through overruns up to `overCreditLimitUpTo` and refunds up to `refundsUpTo` whose amount it has worked out itself. Sums, dates, stock and credit are plain code. Nothing is sent: emails are drafts in the export. Runs are deleted 2 days after the last change.
+Order scans (`file`) are JPEG or PNG under 3 MB, relative to the JSON file. Without `approvals` the agents ask you about every credit overrun and refund; with them, orders above `ordersOver` always come to you, and the code (not the model) lets through overruns up to `overCreditLimitUpTo` and refunds up to `refundsUpTo` whose amount it has worked out itself. Each order is charged once, the first time it is invoiced, collected or has a return settled; a $10 credit pack covers 10 orders, and a run stops before an order your credits cannot pay for. Sums, dates, stock and credit are plain code. Nothing is sent: emails are drafts in the export. Runs are deleted 2 days after the last change.
 
 ## Use as a library
 

@@ -96,7 +96,9 @@ const line = (label, value) => (value === null || value === undefined || value =
 
 /** Plain-text views of each reply. */
 export const views = {
-  account: (a) => `${a.name} <${a.email}>\n` + line("Plan", a.plan) + line("Credits", a.credits) + line("Saved maps", a.maps) + line("Maps left today", a.mapsLeftToday),
+  account: (a) =>
+    `${a.name} <${a.email}>\n` + line("Plan", a.plan) + line("Credits", a.credits) + line("Saved maps", a.maps) + line("Maps left today", a.mapsLeftToday) +
+    (a.orderToCash ? line("Order to cash", `${a.orderToCash.ordersBilledThisMonth} orders billed this month (${a.orderToCash.creditsBilledThisMonth} credits); ${a.orderToCash.price}`) : ""),
   companies: (r) =>
     r.companies.length
       ? r.companies.map((c) => `${c.slug.padEnd(32)} ${String(c.score ?? "–").padStart(3)}  ${c.name} (${c.website})`).join("\n") + "\n"
@@ -123,12 +125,12 @@ export const views = {
     (m.agentReady.length ? "AI-agent gaps:\n" + m.agentReady.map((i) => `  - ${i.text}`).join("\n") + "\n" : "") +
     line("Fixes", `${m.fixes.fixed} fixed, ${m.fixes.asked} asked`) + line("Open", m.url),
   o2cStart: (r) =>
-    `Run ${r.runId}: ${r.company}\n` + line("Model", r.model) + (r.read ? line("Read", Object.entries(r.read).map(([k, n]) => `${n} ${k}`).join(", ")) : line("Orders", r.orders)) +
+    `Run ${r.runId}: ${r.company}\n` + line("Model", r.model) + line("Price", r.price) + (r.read ? line("Read", Object.entries(r.read).map(([k, n]) => `${n} ${k}`).join(", ")) : line("Orders", r.orders)) +
     line("Kept for", r.keptFor) + `Next: requstory o2c run ${r.runId}\n`,
   o2cRun: (r) =>
     (r.events ?? []).map((e) => `  day ${e.day} · ${e.agent ?? e.tool ?? e.t}${e.o ? " · " + e.o : ""}: ${e.text}`).join("\n") + (r.events?.length ? "\n" : "") +
     `Day ${r.day} of ${r.days}` + (r.done ? " · done" : "") + ` · ${r.totals.arrived} orders in, ${r.totals.shipped} shipped, ${r.totals.paid} paid` +
-    ` · model cost $${r.totals.modelCostUsd}\n` + line("Stopped", r.stopped) +
+    (r.totals.ordersBilled ? ` · ${r.totals.ordersBilled} orders billed ($${r.totals.billedUsd})` : "") + "\n" + line("Stopped", r.stopped) +
     (r.exceptions ? `${r.exceptions} waiting for you. Run: requstory o2c exceptions <runId>\n` : ""),
   o2cExceptions: (r) =>
     r.exceptions.length

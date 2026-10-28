@@ -127,7 +127,7 @@ async function o2c(argv, tools, env = {}) {
   return { text, calls, dir };
 }
 
-const board = (over = {}) => ({ day: 1, days: 30, done: false, stopped: null, exceptions: 0, orders: [], totals: { arrived: 1, shipped: 0, paid: 0, modelCostUsd: 0.0002 }, events: [], ...over });
+const board = (over = {}) => ({ day: 1, days: 30, done: false, stopped: null, exceptions: 0, orders: [], totals: { arrived: 1, shipped: 0, paid: 0, modelCostUsd: 0.0002, ordersBilled: 0, billedUsd: 0 }, events: [], ...over });
 
 test("o2c demo needs no key; run keeps going until the agents need the founder", async () => {
   const { text, calls } = await o2c(["demo"], { start_o2c_demo: { runId: "r1", company: "Harbour & Home (made up)", orders: 12, model: "Gemma 4 26B", keptFor: "2 days" } });
@@ -162,13 +162,16 @@ test("o2c start sends the business with order scans as base64", async () => {
   await writeFile(join(dir, "scan.jpg"), Buffer.from([0xff, 0xd8, 0xff, 0xe0]));
   await writeFile(join(dir, "business.json"), JSON.stringify({ company: "Bay Glassworks", customers: [{ name: "Garcia Inc" }], orders: [{ file: "scan.jpg" }, { name: "email", text: "PO 7" }], approvals: { ordersOver: 500 } }));
   const { text, calls } = await o2c(["start", join(dir, "business.json"), "--map=m1"], {
-    start_o2c_run: { runId: "r2", company: "Bay Glassworks", model: "Gemma 4 26B", read: { customers: 1, orders: 2 }, keptFor: "2 days after the last change" },
+    start_o2c_run: { runId: "r2", company: "Bay Glassworks", model: "Gemma 4 26B", price: "$1.00 an order (100 credits), model cost included", read: { customers: 1, orders: 2 }, keptFor: "2 days after the last change" },
   }, { REQUSTORY_API_KEY: KEY });
   const sent = calls[0].args;
   assert.equal(sent.mapId, "m1");
   assert.deepEqual(sent.business.orders[0], { imageBase64: "/9j/4A==", name: "scan.jpg" });
   assert.deepEqual(sent.business.approvals, { ordersOver: 500 });
   assert.match(text, /Read: 1 customers, 2 orders/);
+  assert.match(text, /Price: \$1.00 an order/);
+  const billed = await o2c(["run", "r2", "--steps=1"], { advance_o2c_run: board({ totals: { arrived: 2, shipped: 2, paid: 1, modelCostUsd: 0.001, ordersBilled: 3, billedUsd: 3 } }) }, { REQUSTORY_API_KEY: KEY });
+  assert.match(billed.text, /3 orders billed \(\$3\)/);
   await writeFile(join(dir, "bad.json"), JSON.stringify({ orders: [{ file: "order.pdf" }] }));
   await assert.rejects(o2c(["start", join(dir, "bad.json")], {}), /JPEG or PNG/);
 });
