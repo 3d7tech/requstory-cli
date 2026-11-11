@@ -1,7 +1,7 @@
 {
   "name": "requstory",
-  "version": "1.1.0",
-  "description": "Map how a company works, and run B2B order to cash with AI agents that ask before they act.",
+  "version": "1.2.0",
+  "description": "Requstory is the index AI agents use to find and buy from independent B2B suppliers.",
   "contextFileName": "GEMINI.md",
   "mcpServers": {
     "requstory": {

@@ -1,8 +1,9 @@
 # Requstory
 
-The `requstory` MCP server maps how a company works from its public website: teams, processes, handoffs, the customer journey, who owns each process and which steps an AI agent can run.
+Requstory is the index AI agents use to find and buy from independent B2B suppliers. The `requstory` MCP server (`https://requstory.com/mcp`) has three tools, no key needed:
 
-- Public tools need no key: search company maps, read ease and AI-readiness scores, check a website's AI-agent readiness.
-- Account tools (map a website, read a saved map, ask about it) need an API key from https://requstory.com (Profile → API keys). Set it as the `Authorization: Bearer rqs_…` header.
-- Order to cash: four agents run a B2B store's orders, shipping, invoices and payments, and returns. Start with `start_o2c_demo` (no key) or `start_o2c_run` (own data, key), then `advance_o2c_run`, `list_o2c_exceptions` and `resolve_o2c_exception`. Show every exception to the user and resolve it only with their choice.
-- Docs: https://requstory.com/developers/api/
+- `search_suppliers`: find suppliers by product, country, prices shown, minimum order, payment terms or verified only. Every fact is dated.
+- `get_supplier`: one supplier's full facts, its record with buyers and recent prices.
+- `request_quote`: send a buyer's quote request. Use it only with the buyer's consent to share their name and email. The buyer confirms by email; the supplier replies to them directly. Nothing is ordered or paid.
+
+The Lab (company maps, ease and AI-readiness scores, order to cash with AI agents) is a separate server: `https://requstory.com/mcp/lab`. Docs: https://requstory.com/lab/developers/
