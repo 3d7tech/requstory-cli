@@ -1,23 +1,43 @@
 ---
 name: requstory
-description: Map how a company works from its public website (customer journey, teams, processes, handoffs), find the gaps that make it hard to buy from or work with, ask questions about the map, and check public ease-of-doing-business scores and AI-agent readiness. Also runs B2B order to cash (orders, shipping, invoices and payments, returns) with AI agents that ask a person before credit, stock, payment and refund decisions. Use when the user asks how a company operates, who owns what, where a business loses customers, how easy a company is to deal with, whether AI agents can use a website, or wants agents to process a store's orders, invoices, payments or returns.
-homepage: https://requstory.com/developers/api/
-metadata: {"openclaw":{"primaryEnv":"REQUSTORY_API_KEY","requires":{"env":["REQUSTORY_API_KEY"]}}}
+description: Requstory is the index AI agents use to find and buy from independent B2B suppliers (wholesalers, distributors, manufacturers in the UK and US). Search suppliers by product, country, prices, minimum order and payment terms; read one supplier's dated trade facts and record with buyers; send a buyer's quote request with their consent. Use when the user wants to buy goods for a business, find a wholesaler or trade supplier, compare minimum orders or payment terms, or get a quote. Also (the Lab) maps how a company works from its website, checks ease and AI-readiness scores, and runs B2B order to cash with AI agents.
+homepage: https://requstory.com/suppliers/
+metadata: {"openclaw":{"primaryEnv":"REQUSTORY_API_KEY"}}
 ---
 
 # Requstory
 
-Requstory reads a company's public website and drafts its operating model: the customer journey, teams in three bands, processes and handoffs. It scores how easy the company is to do business with and lists the gaps, each with proof.
+Requstory is the index AI agents use to find and buy from independent B2B suppliers. Every supplier has dated trade facts: prices shown or quote on request, minimum order (with amount), payment terms, delivery and returns, trade account link, and whether an agent could order online. Verified suppliers confirmed their own facts and rank first.
 
-Base URL: `https://requstory.com/api/public/v1`. JSON in and out. Errors are `{"error": {"code", "message"}}`.
+Base URL: `https://requstory.com/api/public/v1`. JSON in and out. Errors are `{"error": {"code", "message"}}`. The Index needs no key.
 
-## Setup
+## Find and buy from suppliers
+
+- Search: `GET /suppliers?q=<product or name>` with optional `country` (GB, UK, US), `prices` (any, shown, quote), `maxMinimumOrder`, `payOnAccount`, `verifiedOnly`, `limit` (up to 25). Each result has a `supplier` value (its website domain).
+- One supplier: `GET /suppliers/{supplier}`: every dated fact, `track` (answered, usual hours to answer, orders that arrived) and `recentPrices`.
+- Quote: `POST /suppliers/{supplier}/quotes {"items", "quantity", "deliverTo", "buyerName", "buyerEmail", "buyerCompany", "message"}`. The buyer gets an email link; the request reaches the supplier once they click it, and the supplier replies to the buyer by email.
+
+```sh
+curl "https://requstory.com/api/public/v1/suppliers?q=compostable+cups&country=GB"
+curl https://requstory.com/api/public/v1/suppliers/ukpackaging.com
+```
+
+Rules:
+- Quote each fact with its date. Never invent prices, minimums or terms; say "quote on request" when the supplier shows none.
+- Send a quote request only after the buyer agrees to share their name and email with that supplier. Nothing is ordered or paid.
+- MCP: the same three tools (`search_suppliers`, `get_supplier`, `request_quote`) at `https://requstory.com/mcp`.
+
+# The Lab
+
+The Lab reads a company's public website and drafts its operating model: the customer journey, teams in three bands, processes and handoffs. It scores how easy the company is to do business with and lists the gaps, each with proof. Its MCP server is `https://requstory.com/mcp/lab`.
+
+## Setup (Lab account tools)
 
 1. Sign up free with Google at https://requstory.com/?ref=clawhub
 2. Open Profile → API keys → Create key. The key starts with `rqs_` and is shown once.
 3. Set `REQUSTORY_API_KEY` to the key. Send it as `Authorization: Bearer $REQUSTORY_API_KEY`.
 
-Public endpoints (companies, scores, AI readiness) also work without a key.
+The Index and the Lab's public endpoints (companies, scores, AI readiness) work without a key.
 
 ## Which call to use
 
@@ -54,7 +74,7 @@ curl https://requstory.com/api/public/v1/maps/<mapId> -H "Authorization: Bearer 
 
 Four agents run a B2B store's order to cash: read orders, check stock and credit, pick lists, invoices and their emails, match bank lines to invoices, chase late payers, handle returns. They stop and ask the founder about credit limits, short stock, packing, reminders, unclear payments and returns.
 
-Tools on `https://requstory.com/mcp`: `start_o2c_demo` (no key) or `start_o2c_run` (the business's own data, key, uses credits) → `advance_o2c_run` → `list_o2c_exceptions` → `resolve_o2c_exception` → `advance_o2c_run` again; `get_o2c_order` and `export_o2c_run` for the record. CLI: `requstory o2c …`.
+Tools on `https://requstory.com/mcp/lab`: `start_o2c_demo` (no key) or `start_o2c_run` (the business's own data, key, uses credits) → `advance_o2c_run` → `list_o2c_exceptions` → `resolve_o2c_exception` → `advance_o2c_run` again; `get_o2c_order` and `export_o2c_run` for the record. CLI: `requstory o2c …`.
 
 - Show each exception to the user and resolve it only with the choice they make. Never pick one yourself.
 - Sums, dates, stock and credit come from code; report them as given. Nothing is sent: emails are drafts in the export.
@@ -63,6 +83,7 @@ Tools on `https://requstory.com/mcp`: `start_o2c_demo` (no key) or `start_o2c_ru
 
 ## Also available
 
-- MCP server: `https://requstory.com/mcp` (same tools)
+- MCP servers: `https://requstory.com/mcp` (the Index) and `https://requstory.com/mcp/lab` (the Lab)
 - CLI: `npx requstory --help`
+- Index: https://requstory.com/suppliers/
 - OpenAPI: https://requstory.com/api/public/v1/openapi.json

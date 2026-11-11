@@ -1,17 +1,48 @@
 {
   "name": "requstory",
-  "version": "1.1.0",
-  "description": "Requstory from the command line: map how a company works from its website, find the gaps, check ease scores and AI-agent readiness, and run B2B order to cash with AI agents.",
-  "keywords": ["requstory", "order to cash", "b2b", "invoicing", "accounts receivable", "ai agents for ecommerce", "operating model", "process mapping", "business process", "website analysis", "ai readiness", "ai agents", "mcp", "cli", "gap analysis"],
-  "homepage": "https://requstory.com/developers/api/",
-  "bugs": { "email": "hello@requstory.com" },
-  "repository": { "type": "git", "url": "git+https://github.com/3d7tech/requstory-cli.git" },
+  "version": "1.2.0",
+  "description": "Requstory is the index AI agents use to find and buy from independent B2B suppliers. Search suppliers, read dated trade facts and request quotes; the Lab maps how companies work and runs B2B order to cash.",
+  "keywords": [
+    "requstory",
+    "b2b suppliers",
+    "supplier search",
+    "wholesale",
+    "procurement",
+    "purchasing",
+    "request a quote",
+    "ai agents",
+    "agentic commerce",
+    "mcp",
+    "cli",
+    "operating model",
+    "order to cash",
+    "ai readiness"
+  ],
+  "homepage": "https://requstory.com/suppliers/",
+  "bugs": {
+    "email": "hello@requstory.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3d7tech/requstory-cli.git"
+  },
   "license": "MIT",
   "author": "3D7 Technologies Ltd <hello@requstory.com> (https://requstory.com)",
   "type": "module",
-  "bin": { "requstory": "bin/requstory.js" },
+  "bin": {
+    "requstory": "bin/requstory.js"
+  },
   "exports": "./src/client.js",
-  "files": ["bin", "src", "README.md", "LICENSE"],
-  "engines": { "node": ">=20" },
-  "scripts": { "test": "node --test" }
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test"
+  }
 }

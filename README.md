@@ -1,14 +1,42 @@
 # requstory
 
-Requstory from the command line. Map how a company works from its public website (customer journey, teams, processes, handoffs), find the gaps, ask questions, and check public ease scores and AI-agent readiness.
+[![smithery badge](https://smithery.ai/badge/@3d7tech/requstory-cli)](https://smithery.ai/server/@3d7tech/requstory-cli)
 
-It also runs **order to cash for a B2B online store with four AI agents** (process orders, ship orders, invoice and collect payments, handle returns) that stop and ask you about credit limits, short stock, packing, reminders, unclear payments and returns.
+**Requstory is the index AI agents use to find and buy from independent B2B suppliers.** Wholesalers, distributors and manufacturers in the UK and US, each with dated trade facts: prices or quote on request, minimum order, payment terms, delivery, returns and a trade account link. Verified suppliers confirmed their own facts.
 
-- Website: https://requstory.com
-- API and MCP docs: https://requstory.com/developers/api/
-- MCP server: `https://requstory.com/mcp`
+- Index: https://requstory.com/suppliers/
+- MCP server: `https://requstory.com/mcp` (no key needed)
+- API docs: https://requstory.com/lab/developers/
 
-## Install
+## The Index (MCP)
+
+Add `https://requstory.com/mcp` to any MCP client (Claude, ChatGPT, Cursor, Gemini CLI, VS Code). Three tools:
+
+| Tool | What it does |
+| --- | --- |
+| `search_suppliers` | Find suppliers by product, country, prices shown, minimum order, payment terms or verified only |
+| `get_supplier` | One supplier's dated facts, its record with buyers (answered, usual hours, arrived) and recent prices |
+| `request_quote` | Send a buyer's quote request; the buyer confirms by email, then the supplier replies to them directly |
+
+Nothing is ordered or paid. Use `request_quote` only with the buyer's consent to share their name and email.
+
+The same over REST, no key:
+
+```sh
+curl "https://requstory.com/api/public/v1/suppliers?q=compostable+cups&country=GB"
+curl https://requstory.com/api/public/v1/suppliers/ukpackaging.com
+curl -X POST https://requstory.com/api/public/v1/suppliers/ukpackaging.com/quotes \
+  -H "Content-Type: application/json" \
+  -d '{"items":"12oz compostable cups","quantity":"5,000 a month","deliverTo":"Leeds, UK","buyerName":"Sam","buyerEmail":"sam@cafe.example"}'
+```
+
+Suppliers: get listed free at https://requstory.com/suppliers/join/.
+
+## The Lab
+
+The Lab is Requstory's research side: it maps how a company works from its public website (customer journey, teams, processes, handoffs), finds the gaps, checks ease scores and AI-agent readiness, and runs **order to cash for a B2B online store with four AI agents** that stop and ask you about credit limits, short stock, packing, reminders, unclear payments and returns. Its MCP server is `https://requstory.com/mcp/lab`; this CLI drives it from the terminal.
+
+### Install
 
 ```sh
 npm install -g requstory
@@ -18,7 +46,7 @@ npx requstory --help
 
 Node 20 or later. No dependencies.
 
-## Quick start
+### Quick start
 
 ```sh
 # Public, no key needed
@@ -37,7 +65,7 @@ requstory ask <mapId> "What should we fix first?" --ai   # Requ AI, uses credits
 
 Add `--json` to any command for the raw reply. The key can also come from `REQUSTORY_API_KEY`. `login` saves it to `~/.config/requstory/config.json` (readable only by you).
 
-## Commands
+### Commands
 
 | Command | What it does | Key |
 | --- | --- | --- |
@@ -54,7 +82,7 @@ Add `--json` to any command for the raw reply. The key can also come from `REQUS
 | `o2c start <business.json>` | Start a day of your own business | Yes |
 | `o2c run / exceptions / decide / order / export` | Drive a run and get the record | Demo: no |
 
-## Order to cash
+### Order to cash
 
 ```sh
 # A month of a made-up store, no key needed
@@ -88,7 +116,7 @@ requstory o2c start business.json --map=<mapId>
 
 Order scans (`file`) are JPEG or PNG under 3 MB, relative to the JSON file. Without `approvals` the agents ask you about every credit overrun and refund; with them, orders above `ordersOver` always come to you, the code (not the model) lets through overruns up to `overCreditLimitUpTo` and refunds up to `refundsUpTo` whose amount it has worked out itself, returns for invoices older than `returnsWithinDays` (or with no `date`) always come to you, and a payment that leaves `shortPaymentWriteOffUpTo` or less owed closes the invoice. 0 means no rule. Each order is charged once, the first time it is invoiced, collected or has a return settled; a $10 credit pack covers 10 orders, and a run stops before an order your credits cannot pay for. Sums, dates, stock and credit are plain code. Nothing is sent: emails are drafts in the export. Runs are deleted 2 days after the last change.
 
-## Use as a library
+### Use as a library
 
 ```js
 import { createClient } from "requstory";
