@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "com.requstory/lab",
+  "title": "Requstory Lab",
+  "description": "Map how a company works from its website, check ease scores and AI-agent readiness.",
+  "version": "1.0.0",
+  "websiteUrl": "https://requstory.com/lab/developers/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://requstory.com/mcp/lab",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional. Public tools need no sign-in. Account tools ask the client to sign in with OAuth (discovery at https://requstory.com/.well-known/oauth-protected-resource/mcp/lab); clients without OAuth can send \"Bearer rqs_…\", a key from the Requstory profile.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

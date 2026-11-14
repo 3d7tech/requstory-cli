@@ -1,0 +1,53 @@
+name: Publish to the MCP Registry
+# Publishes registry/server.json (com.requstory/mcp, the Index at https://requstory.com/mcp) and
+# registry/lab/server.json (com.requstory/lab, https://requstory.com/mcp/lab) to registry.modelcontextprotocol.io.
+# Login is HTTP domain proof: the registry checks https://requstory.com/.well-known/mcp-registry-auth against the
+# ed25519 private key in the repository secret MCP_REGISTRY_KEY (hex). Bump "version" in a server.json to publish it again.
+on:
+  workflow_dispatch:
+    inputs:
+      servers:
+        description: Which servers to publish
+        required: true
+        type: choice
+        options: [both, index, lab]
+        default: both
+permissions:
+  contents: read
+concurrency:
+  group: mcp-registry
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --version
+      - name: Validate
+        run: |
+          ./mcp-publisher validate registry/server.json
+          ./mcp-publisher validate registry/lab/server.json
+      - name: Log in with the requstory.com key
+        env:
+          KEY: ${{ secrets.MCP_REGISTRY_KEY }}
+        run: |
+          test -n "$KEY" || { echo "::error::Add the repository secret MCP_REGISTRY_KEY (ed25519 private key, hex)"; exit 1; }
+          ./mcp-publisher login http --domain requstory.com --private-key "$KEY"
+      - name: Publish the Index (com.requstory/mcp)
+        if: inputs.servers != 'lab'
+        run: ./mcp-publisher publish registry/server.json
+      - name: Publish the Lab (com.requstory/lab)
+        if: inputs.servers != 'index'
+        run: ./mcp-publisher publish registry/lab/server.json
+      - name: Show what the registry lists
+        run: |
+          curl -fsS "https://registry.modelcontextprotocol.io/v0/servers?search=requstory" | python3 -c '
+          import json, sys
+          for s in json.load(sys.stdin).get("servers", []):
+              srv = s.get("server", s)
+              meta = s.get("_meta", {}).get("io.modelcontextprotocol.registry/official", {})
+              print(srv.get("name"), srv.get("version"), "isLatest=" + str(meta.get("isLatest")))
+          '
