@@ -1,9 +1,0 @@
-# Requstory is a hosted remote MCP server (Streamable HTTP): nothing to build or run.
-# Smithery lists it by URL. The Lab is a second server at https://requstory.com/mcp/lab.
-runtime: external
-name: Requstory Index
-description: Requstory is the index AI agents use to find and buy from independent B2B suppliers.
-url: https://requstory.com/mcp
-transport: streamable-http
-homepage: https://requstory.com/suppliers/
-auth: none

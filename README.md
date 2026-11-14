@@ -1,12 +1,10 @@
 # requstory
 
-[![smithery badge](https://smithery.ai/badge/@3d7tech/requstory-cli)](https://smithery.ai/server/@3d7tech/requstory-cli)
-
-**Requstory is the index AI agents use to find and buy from independent B2B suppliers.** Wholesalers, distributors and manufacturers in the UK and US, each with dated trade facts: prices or quote on request, minimum order, payment terms, delivery, returns and a trade account link. Verified suppliers confirmed their own facts.
+Requstory is the index AI agents use to find and buy from independent B2B suppliers. Wholesalers, distributors and manufacturers in the UK and US, each with dated trade facts: prices or quote on request, minimum order, payment terms, delivery, returns and a trade account link. Verified suppliers confirmed their own facts.
 
 - Index: https://requstory.com/suppliers/
-- MCP server: `https://requstory.com/mcp` (no key needed)
-- API docs: https://requstory.com/lab/developers/
+- MCP server: `https://requstory.com/mcp` (Streamable HTTP, no key needed). Open it in a browser for the setup page.
+- API docs: https://requstory.com/developers/api/
 
 ## The Index (MCP)
 
@@ -20,7 +18,37 @@ Add `https://requstory.com/mcp` to any MCP client (Claude, ChatGPT, Cursor, Gemi
 
 Nothing is ordered or paid. Use `request_quote` only with the buyer's consent to share their name and email.
 
-The same over REST, no key:
+## Cursor
+
+This repository is an Agent Plugin: `plugin.json`, `mcp.json` (the Index at `https://requstory.com/mcp`), a skill in `skills/requstory/` and a logo in `assets/`.
+
+**From the Marketplace.** Open Cursor's plugin Marketplace, search for Requstory and install it. The Index tools are then available in Agent chat.
+
+**By hand.** Add the server to `~/.cursor/mcp.json` (or `.cursor/mcp.json` in a project):
+
+```json
+{"mcpServers":{"requstory":{"url":"https://requstory.com/mcp"}}}
+```
+
+**Try it.** Ask the agent:
+
+- "Find UK suppliers of compostable cups that show prices, with a minimum order I can meet at £250"
+- "Search for UK suppliers of bulk bags of topsoil and give me the best match's minimum order, delivery and payment terms"
+- "Find US janitorial suppliers that offer payment on account"
+
+The agent uses `search_suppliers` to find suppliers and `get_supplier` for one supplier's full facts. When you want a price, stock or delivery date, it can use `request_quote`. Only do that with the buyer's consent to share their name and email with that supplier. The buyer then gets an email and must click the link before the request reaches the supplier, who replies to the buyer directly. Nothing is ordered or paid through Requstory.
+
+**Test the plugin locally.** Clone this repository into Cursor's local plugins folder and restart Cursor:
+
+```sh
+git clone https://github.com/3d7tech/requstory-cli ~/.cursor/plugins/local/requstory
+```
+
+To try changes, edit the files in `~/.cursor/plugins/local/requstory` and restart Cursor again.
+
+## The Index over REST
+
+The same three actions, no key:
 
 ```sh
 curl "https://requstory.com/api/public/v1/suppliers?q=compostable+cups&country=GB"
@@ -32,7 +60,7 @@ curl -X POST https://requstory.com/api/public/v1/suppliers/ukpackaging.com/quote
 
 Suppliers: get listed free at https://requstory.com/suppliers/join/.
 
-## The Lab
+## The Lab (separate server: https://requstory.com/mcp/lab)
 
 The Lab is Requstory's research side: it maps how a company works from its public website (customer journey, teams, processes, handoffs), finds the gaps, checks ease scores and AI-agent readiness, and runs **order to cash for a B2B online store with four AI agents** that stop and ask you about credit limits, short stock, packing, reminders, unclear payments and returns. Its MCP server is `https://requstory.com/mcp/lab`; this CLI drives it from the terminal.
 
